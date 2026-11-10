@@ -66,8 +66,8 @@ button {
   margin: 0 0 5px 0;
 }
 
-.card.tara, 
-.card.zile {
+.card .tara,
+.card .zile {
   margin: 0;
   color: #6b7280;
   font-size: 0.9rem;
@@ -85,4 +85,115 @@ button {
 
 .card.vizitat button {
   background: #2e7d32;
+}
+
+/* ===== Laboratorul 4 ===== */
+
+.formular {
+  align-items: flex-start;
+}
+
+.camp {
+  flex: 1;
+  min-width: 0;
+}
+
+.camp input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cautare {
+  margin-bottom: 1.2rem;
+}
+
+.cautare input {
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid #c3c7cf;
+  border-radius: 7px;
+  font: inherit;
+}
+
+/* ===== Laboratorul 4, exercițiul 3d ===== */
+
+.stare {
+  padding: 0.8rem 1rem;
+  border-radius: 9px;
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.stare.eroare {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.formular input.invalid {
+  border-color: #dc2626;
+  background: #fff5f5;
+}
+
+.eroare-camp {
+  margin: 0.3rem 0 0 0;
+  font-size: 0.8rem;
+  color: #dc2626;
+}
+
+button:disabled {
+  background: #a89fc9;
+  cursor: not-allowed;
+}
+
+.gol {
+  padding: 1.5rem;
+  border: 2px dashed #c3c7cf;
+  border-radius: 10px;
+  text-align: center;
+  color: #6b7280;
+}
+
+/* ===== Laboratorul 4, exercițiul 5c: paginarea ===== */
+
+.paginare {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  color: #4b5563;
+}
+
+/* ===== Laboratorul 4, exercițiul 4: panoul de statistici, corectat ===== */
+
+.panou {
+  margin-bottom: 1.4rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid #d8dbe0;
+  border-radius: 10px; /* greșeala 6: era 10, fără unitate */
+}
+
+.panou h2 {
+  margin: 0 0 0.6rem 0; /* greșeala 7: a doua regulă .panou h2 { margin: 0 } anula margin-bottom */
+  font-size: 1.1rem;
+}
+
+.panou label {
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.panou input {
+  width: 70px;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid #c3c7cf;
+  border-radius: 6px;
+  font: inherit;
+}
+
+.panou ul {
+  margin: 0.7rem 0 0 0;
+  padding-left: 1.1rem;
+  color: #4b5563;
+  font-size: 0.95rem;
 }
