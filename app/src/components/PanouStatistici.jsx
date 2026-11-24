@@ -1,73 +1,71 @@
-// Exercițiul 4: varianta corectată (cele cinci greșeli din cod sunt marcate)
+// Laboratorul 5: panoul de statistici. Cifrele sunt calculate în SQL, de ruta /api/statistici;
+// interfața doar le cere, câte o cerere la fiecare tastare.
 import { useEffect, useState } from 'react'
+import { getStatistici } from '../api/statistici.js'
 
 export default function PanouStatistici() {
-  const [destinatii, setDestinatii] = useState([])
-  const [incarcare, setIncarcare] = useState(true)
-  const [eroare, setEroare] = useState(null)
   const [prag, setPrag] = useState('3')
+  const [tara, setTara] = useState('')
+  const [statistici, setStatistici] = useState(null)
+  const [eroare, setEroare] = useState(null)
 
   useEffect(() => {
+    const pragNumar = Number(prag)
+
+    // un prag gol sau invalid nu se trimite: serverul ar răspunde oricum cu 400
+    if (!Number.isInteger(pragNumar) || pragNumar < 1) {
+      setStatistici(null)
+      return
+    }
+
     async function incarca() {
       try {
-        const response = await fetch('http://localhost:3001/destinatii')
-
-        if (!response.ok) {
-          throw new Error(`Serverul a răspuns cu ${response.status}`)
-        }
-
-        const date = await response.json()
-        setDestinatii(date)
-      } catch (err) {
-        setEroare(err.message)
-      } finally {
-        // Greșeala 5: setIncarcare(false) era doar în try
-        setIncarcare(false)
+        const date = await getStatistici(pragNumar, tara.trim())
+        setStatistici(date)
+        setEroare(null)
+      } catch (error) {
+        setEroare(error.message)
       }
     }
 
     incarca()
-  }, [])
-
-  if (incarcare) {
-    return <p className="stare">Se încarcă statisticile...</p>
-  }
-
-  if (eroare) {
-    return <p className="stare eroare">Statistici indisponibile: {eroare}</p>
-  }
-
-  // Greșeala 3: „cel puțin” înseamnă >=, nu >
-  const filtrate = destinatii.filter((d) => d.zile >= Number(prag))
-  // Greșeala 1: totalul se calcula din toate destinațiile, nu din cele filtrate
-  const totalZile = filtrate.reduce((suma, d) => suma + d.zile, 0)
-  const medie = filtrate.length === 0 ? 0 : totalZile / filtrate.length
+  }, [prag, tara])
 
   return (
     <section className="panou">
       <h2>Statistici</h2>
 
-      <label>
-        Cel puțin{' '}
-        <input
-          type="number"
-          value={prag}
-          // Greșeala 4: onChange={setPrag} punea în stare evenimentul, nu textul
-          onChange={(event) => setPrag(event.target.value)}
-        />{' '}
-        zile
-      </label>
+      <div className="panou-filtre">
+        <label>
+          Cel puțin{' '}
+          <input
+            type="number"
+            min="1"
+            value={prag}
+            onChange={(event) => setPrag(event.target.value)}
+          />{' '}
+          zile
+        </label>
 
-      {/* Greșeala 2: condiția trebuie să fie booleană și adevărată doar pentru lista goală */}
-      {filtrate.length === 0 && (
-        <p className="gol">Nicio destinație cu cel puțin {prag} zile.</p>
-      )}
+        <label>
+          Țara{' '}
+          <input
+            type="text"
+            className="panou-tara"
+            placeholder="toate"
+            value={tara}
+            onChange={(event) => setTara(event.target.value)}
+          />
+        </label>
+      </div>
 
-      {filtrate.length > 0 && (
+      {eroare && <p className="stare eroare">Statistici indisponibile: {eroare}</p>}
+
+      {!eroare && statistici && (
         <ul>
-          <li>Destinații: {filtrate.length}</li>
-          <li>Total zile: {totalZile}</li>
-          <li>Media: {medie.toFixed(1)} zile</li>
+          <li>Destinații: {statistici.destinatii}</li>
+          <li>Total zile: {statistici.zile}</li>
+          <li>Media: {statistici.medie} zile</li>
         </ul>
       )}
     </section>

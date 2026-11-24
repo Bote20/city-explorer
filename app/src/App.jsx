@@ -5,8 +5,7 @@ import ListaDestinatii from './components/ListaDestinatii.jsx'
 import FormularDestinatie from './components/FormularDestinatie.jsx'
 import Rezumat from './components/Rezumat.jsx'
 import Cautare from './components/Cautare.jsx'
-// Exercițiul 4 (temporar): se decomentează cele două linii marcate „Ex. 4”
-// import PanouStatistici from './components/PanouStatistici.jsx'
+import PanouStatistici from './components/PanouStatistici.jsx'
 import './App.css'
 
 export default function App() {
@@ -18,18 +17,12 @@ export default function App() {
   const [seTrimite, setSeTrimite] = useState(false)
   // Exercițiul 3a
   const [cautare, setCautare] = useState('')
-  // Exercițiul 5c
-  const [pagina, setPagina] = useState(1)
-  const [totalPagini, setTotalPagini] = useState(1)
 
   useEffect(() => {
     async function incarca() {
-      setIncarcare(true)
       try {
-        const raspuns = await getDestinatii(pagina)
-        setDestinatii(raspuns.data)
-        setTotalPagini(raspuns.pages)
-        setEroare(null)
+        const date = await getDestinatii()
+        setDestinatii(date)
       } catch (error) {
         setEroare(error.message)
       } finally {
@@ -38,7 +31,7 @@ export default function App() {
     }
 
     incarca()
-  }, [pagina])
+  }, [])
 
   // Exercițiul 1c: întâi serverul, apoi starea, cu obiectul întors de server
   async function handleToggle(id) {
@@ -89,6 +82,8 @@ export default function App() {
         />
         <FormularDestinatie onAdd={handleAdd} seTrimite={seTrimite} />
         <Cautare valoare={cautare} onChange={setCautare} />
+        {/* Laboratorul 5: panoul cere cifrele de la /api/statistici */}
+        <PanouStatistici />
 
         {/* Exercițiul 3c: două motive diferite pentru o listă goală */}
         {destinatii.length === 0 && (
@@ -102,21 +97,6 @@ export default function App() {
         {afisate.length > 0 && (
           <ListaDestinatii destinatii={afisate} onToggle={handleToggle} />
         )}
-
-        {/* Exercițiul 5c: paginarea */}
-        <div className="paginare">
-          <button type="button" disabled={pagina === 1} onClick={() => setPagina(pagina - 1)}>
-            Înapoi
-          </button>
-          <span>pagina {pagina} din {totalPagini}</span>
-          <button
-            type="button"
-            disabled={pagina >= totalPagini}
-            onClick={() => setPagina(pagina + 1)}
-          >
-            Înainte
-          </button>
-        </div>
       </>
     )
   }
@@ -124,7 +104,6 @@ export default function App() {
   return (
     <main>
       <h1>City Explorer</h1>
-      {/* <PanouStatistici /> Ex. 4 */}
       {continut}
     </main>
   )

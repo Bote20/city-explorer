@@ -1,10 +1,8 @@
-// Exercițiul 5: pentru setul de două mii se pune temporar portul 3002
-const API_URL = 'http://localhost:3001'
+// Laboratorul 5, exercițiul 3b: datele vin acum de la serverul Express, nu de la json-server
+const API_URL = 'http://localhost:3000/api'
 
-// Exercițiul 1a + 5c: cere o singură pagină, de câte 20 de destinații,
-// și întoarce obiectul primit (data, pages, items, ...), nu doar lista
-export async function getDestinatii(pagina = 1) {
-  const response = await fetch(`${API_URL}/destinatii?_page=${pagina}&_per_page=20`)
+export async function getDestinatii() {
+  const response = await fetch(`${API_URL}/destinatii`)
 
   if (!response.ok) {
     throw new Error(`Serverul a răspuns cu ${response.status}`)
@@ -13,11 +11,11 @@ export async function getDestinatii(pagina = 1) {
   return response.json()
 }
 
-export async function postDestinatie(d) {
+export async function postDestinatie(destinatie) {
   const response = await fetch(`${API_URL}/destinatii`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(d),
+    body: JSON.stringify(destinatie),
   })
 
   if (!response.ok) {
